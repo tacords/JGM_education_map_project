@@ -1,0 +1,7 @@
+Peru regional boundaries (and the corresponding geojson data) were sourced here:
+
+https://data.humdata.org/dataset/geoboundaries-admin-boundaries-for-peru
+
+Peruvian education data sourced from Peruvian government statistics.
+
+... (link here) ...
