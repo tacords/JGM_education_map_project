@@ -1,12 +1,17 @@
 $(document).ready(function() {
-    console.log("Map.js running");
 
     var map = L.map('map').setView([-9.19, -75.0152], 5); // Centered on Peru
-    console.log("Map initialized");
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
+
+    function getColor(value) {
+      return value > 66 ? '#2ca25f' :   // green
+          value > 33 ? '#ffcc00' :   // yellow
+                '#de2d26';    // red
+    }
+
 
     fetch('data/peru_regions.geojson')
       .then(response => {
@@ -16,15 +21,25 @@ $(document).ready(function() {
         return response.json();
 })
       .then(data => {
-        console.log("GeoJSON loaded:", data);
+
+        // Assign a random education level (1–100) to each province
+        data.features.forEach(feature => {
+            feature.properties.educationLevel = Math.floor(Math.random() * 100) + 1;
+        }); // delete this line later to use real data
+
         L.geoJson(data, {
-            style: {
-            color: 'blue',
-            weight: 2,
-            fillOpacity: 0.5
+            style: function (feature){
+              const value = feature.properties.educationLevel;
+                return {
+                    fillColor: getColor(value),
+                    weight: 1,
+                    fillOpacity: 0.7
+                };
             },
             onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.shapeName);
+            const name = feature.properties.shapeName;
+            const value = feature.properties.educationLevel;
+              layer.bindPopup(`<strong>${name}</strong><br>Education Level: ${value}`);
             }
         }).addTo(map);
       })
