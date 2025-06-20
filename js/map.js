@@ -42,7 +42,7 @@ $(document).ready(function() {
             onEachFeature: function (feature, layer) {
             const name = feature.properties.shapeName;
             const value = feature.properties.educationLevel;
-            const dropoutRate = feature.properties.dropoutRate || "21%"; // fallback if not defined
+            const dropoutRate = feature.properties.dropoutRate || "21%";
             layer.bindPopup(`<strong>${name}</strong><br>Average years of schooling: ${value}<br>School dropout rate: ${dropoutRate}</strong>`);
             }
         }).addTo(map);
