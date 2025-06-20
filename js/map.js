@@ -7,8 +7,8 @@ $(document).ready(function() {
     }).addTo(map);
 
     function getColor(value) {
-      return value > 66 ? '#2ca25f' :   // green
-          value > 33 ? '#ffcc00' :   // yellow
+      return value > 10 ? '#2ca25f' :   // green
+          value > 6 ? '#ffcc00' :   // yellow
                 '#de2d26';    // red
     }
 
@@ -22,9 +22,9 @@ $(document).ready(function() {
 })
       .then(data => {
 
-        // Assign a random education level (1–100) to each province
+        // Assign a random avg years of schooling (1–16) to each province
         data.features.forEach(feature => {
-            feature.properties.educationLevel = Math.floor(Math.random() * 100) + 1;
+            feature.properties.educationLevel = Math.floor(Math.random() * 16) + 1;
         }); // delete this line later to use real data
 
         L.geoJson(data, {
@@ -32,14 +32,18 @@ $(document).ready(function() {
               const value = feature.properties.educationLevel;
                 return {
                     fillColor: getColor(value),
-                    weight: 1,
-                    fillOpacity: 0.7
+                    weight: 2,
+                    fillOpacity: 0.6,
+                    maxZoom: 12,
+                    color: 'white',
+                    dashArray: '3'
                 };
             },
             onEachFeature: function (feature, layer) {
             const name = feature.properties.shapeName;
             const value = feature.properties.educationLevel;
-              layer.bindPopup(`<strong>${name}</strong><br>Education Level: ${value}`);
+            const dropoutRate = feature.properties.dropoutRate || "21%"; // fallback if not defined
+            layer.bindPopup(`<strong>${name}</strong><br>Average years of schooling: ${value}<br>School dropout rate: ${dropoutRate}</strong>`);
             }
         }).addTo(map);
       })
